@@ -1,16 +1,39 @@
 "use client";
-import React from 'react';
 
 import { useEffect, useState } from 'react';
 
 export default function ViewersPage() {
   const [viewers, setViewers] = useState(null);
+  const [error, setError] = useState(null);
 
-  const apiKey = 'AIzaSyCod16mNBUfXDZN9rNmxrUocyg0LAFLDmA';
-  const videoId = 'KkBqGTKm378';
+  const apiKey = 'AIzaSyCod16mNBUfXDZN9rNmxrUocyg0LAFLDmA'; // ← Substitua por sua chave da API
+  const channelId = 'UC4kPLFhwB3FCwwWQw843hyw'; // ← Substitua pelo ID do canal da Comunidade da Fé
 
   useEffect(() => {
-    const fetchViewers = async () => {
+    const fetchLiveVideoId = async () => {
+      try {
+        const res = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=id&channelId=${channelId}&eventType=live&type=video&key=${apiKey}`
+        );
+        const data = await res.json();
+        const videoId = data.items[0]?.id?.videoId;
+
+        if (!videoId) {
+          setError('Nenhuma transmissão ao vivo no momento.');
+          return;
+        }
+
+        fetchViewers(videoId);
+
+        const interval = setInterval(() => fetchViewers(videoId), 10000);
+        return () => clearInterval(interval);
+      } catch (err) {
+        console.error('Erro ao buscar live:', err);
+        setError('Erro ao buscar live.');
+      }
+    };
+
+    const fetchViewers = async (videoId) => {
       try {
         const res = await fetch(
           `https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${videoId}&key=${apiKey}`
@@ -24,16 +47,14 @@ export default function ViewersPage() {
       }
     };
 
-    fetchViewers();
-    const interval = setInterval(fetchViewers, 10000);
-    return () => clearInterval(interval);
+    fetchLiveVideoId();
   }, []);
 
   return (
     <div className="container">
       <div id="title"> CONEXÕES AO VIVO<br />COMUNIDADE DA FÉ CHURCH</div>
       <div id="viewersCount">
-        {viewers === null ? 'Carregando...' : ` ${viewers} ao vivo`}
+        {error ? error : viewers === null ? 'Carregando...' : ` ${viewers} ao vivo`}
       </div>
 
       <style jsx>{`
@@ -61,7 +82,7 @@ export default function ViewersPage() {
         #viewersCount {
           font-size: 6rem;
           font-weight: bold;
-          color:rgb(255, 174, 0);
+          color:rgb(255, 157, 0);
           text-shadow: 4px 4px 20px rgba(0, 0, 0, 0.8);
         }
 
