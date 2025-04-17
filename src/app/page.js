@@ -52,9 +52,8 @@ export default function ViewersPage() {
 
   return (
     <div className="container">
-      <div id="title"> CONEXÕES AO VIVO<br />COMUNIDADE DA FÉ CHURCH</div>
-      <div id="viewersCount">
-        {error ? error : viewers === null ? 'Carregando...' : ` ${viewers} ao vivo`}
+    <div id="viewersCount">
+        {error ? error : viewers === null ? 'Carregando...' : ` PONTOS AO VIVO: ${viewers}`}
       </div>
 
       <style jsx>{`
