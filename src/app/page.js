@@ -7,7 +7,7 @@ export default function ViewersPage() {
   const [error, setError] = useState(null);
 
   const apiKey = 'AIzaSyCod16mNBUfXDZN9rNmxrUocyg0LAFLDmA'; // ← Substitua por sua chave da API
-  const channelId = 'UC4kPLFhwB3FCwwWQw843hyw'; // ← Substitua pelo ID do canal da Comunidade da Fé
+  const channelId = 'UC4kPLFhwB3FCwwWQw843hyw'; // ← Substitua pelo ID do canal da  da Fé
 
   useEffect(() => {
     const fetchLiveVideoId = async () => {
