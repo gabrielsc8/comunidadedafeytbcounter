@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONEXÕES AO VIVO - COMUNIDADE DA FÉ CHURCH</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000000;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 90%;
+    }
+
+    #title {
+      font-size: 2.8rem;
+      font-weight: bold;
+      margin-bottom: 3rem;
+      text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    #viewersCount {
+      font-size: 6rem;
+      font-weight: bold;
+      color: #ff0000;
+      text-shadow: 4px 4px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    @media (max-height: 720px) {
+      #title {
+        font-size: 2.2rem;
+      }
+
+      #viewersCount {
+        font-size: 4.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="title">CONEXÕES AO VIVO<br>COMUNIDADE DA FÉ CHURCH</div>
+    <div id="viewersCount">Carregando...</div>
+  </div>
+
+  <script>
+    const apiKey = 'AIzaSyCod16mNBUfXDZN9rNmxrUocyg0LAFLDmA';
+    const videoId = 'KkBqGTKm378'; // ID do vídeo ao vivo
+
+    async function fetchLiveViewers() {
+      try {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=${videoId}&key=${apiKey}`);
+        const data = await response.json();
+        const viewers = data.items[0]?.liveStreamingDetails?.concurrentViewers || '0';
+        document.getElementById("viewersCount").textContent = `${viewers} ao vivo`;
+      } catch (error) {
+        document.getElementById("viewersCount").textContent = 'Erro ao carregar';
+        console.error('Erro ao buscar viewers:', error);
+      }
+    }
+
+    fetchLiveViewers(); // Chamada inicial
+    setInterval(fetchLiveViewers, 10000); // Atualiza a cada 10 segundos
+  </script>
+</body>
+</html>
